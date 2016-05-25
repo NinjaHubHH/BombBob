@@ -18,7 +18,10 @@
         <activity android:name=".StoryStart" />
         <activity android:name=".StoryTutorial" />
         <activity android:name=".WaitScreen" />
-        <activity android:name=".EventActivity"></activity>
+        <activity android:name=".EventActivity" />
+        <activity android:name=".AccelerationEvent" />
+        <activity android:name=".Successcreen" />
+        <activity android:name=".Failedscreen"></activity>
     </application>
 
 </manifest>
