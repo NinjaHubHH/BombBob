@@ -23,6 +23,8 @@ public class WaitScreen extends AppCompatActivity {
 
 
     public int waitedTime;
+    public boolean timerRun = true;
+    public boolean success = true;
 
 
     public void startCounter() {
@@ -34,19 +36,25 @@ public class WaitScreen extends AppCompatActivity {
 
         @Override
         public void run() {
-            for (waitedTime = waitedTime; waitedTime >= 0; waitedTime--) {
-                try {
+            if (timerRun) {
+                for (waitedTime = waitedTime; waitedTime >= 0; waitedTime--) {
+                    try {
 
-                    Thread.sleep(1000);
-                } catch (Exception e) {
+                        Thread.sleep(1000);
+                    } catch (Exception e) {
+                    }
+
+                }
+
+                timerRun = false;
+                if(success = true) {
+                    success = false;
+                    Intent acceleration = new Intent(WaitScreen.this, AccelerationEvent.class);
+                    startActivity(acceleration);
+                    finish();
                 }
 
             }
-
-            Intent acceleration = new Intent(WaitScreen.this, AccelerationEvent.class);
-            startActivity(acceleration);
-            finish();
-
         }
     }
 

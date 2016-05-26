@@ -17,6 +17,10 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
     private SensorManager SM;
     double sensorValue;
     public int timeCount;
+    Thread thread = new Thread(new Timer());
+    public int eventTime  = 10;
+    boolean timerRun = true;
+    boolean success = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +37,9 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
 
         startCounter();
 
-
     }
 
     @Override
-
-
     public void onSensorChanged(SensorEvent event) {
 
         textX.setText("X: " + event.values[0]);
@@ -50,12 +51,11 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
 
         if (sensorValue > 5){
 
-
+            success = true;
 
             Intent success = new Intent (AccelerationEvent.this, Successcreen.class);
             startActivity(success);
             finish();
-
 
         }
 
@@ -68,7 +68,6 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
 
     public void startCounter (){
 
-        Thread thread = new Thread(new Timer());
         thread.start();
     }
 
@@ -77,20 +76,35 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
     private class Timer implements Runnable {
 
         @Override
-        public void run(){
-            for(int i = 10; i >= 0; i--){
-                try{
-                    Thread.sleep(1000);
-                    timeCount = i;
-                }catch(Exception e) {}
+        public void run() {
+            if (timerRun) {
 
+                for (eventTime = eventTime; eventTime >= 0; eventTime--) {
+                    try {
+                        Thread.sleep(1000);
+                        timeCount = eventTime;
+                    } catch (Exception e) {
+                    }
+
+                }
+
+                timerRun = false;
+                eventTime = 10;
+
+                if (success = false) {
+                    Intent fail = new Intent(AccelerationEvent.this, Failedscreen.class);
+                    startActivity(fail);
+                    finish();
+                }
             }
-
-            Intent fail = new Intent (AccelerationEvent.this, Failedscreen.class);
-            startActivity(fail);
-            finish();
-
         }
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        SM.unregisterListener(this);
+        eventTime = 10;
     }
 
 }
