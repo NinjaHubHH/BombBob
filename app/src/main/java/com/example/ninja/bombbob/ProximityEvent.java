@@ -10,31 +10,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class AccelerationEvent extends AppCompatActivity implements SensorEventListener {
+public class ProximityEvent extends AppCompatActivity implements SensorEventListener {
 
-    private TextView textX, textY, textZ, textTime;
+    private TextView textX;
     private Sensor mySensor;
     private SensorManager SM;
     double sensorValue;
     public int timeCount;
-
+    Thread thread = new Thread(new Timer());
     public int eventTime  = 10;
-    protected boolean timerRun = true;
-    protected boolean success = false;
+    boolean timerRun = true;
+    boolean success = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_acceleration_event);
+        setContentView(R.layout.activity_proximity_event);
 
         SM = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mySensor = SM.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mySensor = SM.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         textX = (TextView)findViewById(R.id.textX);
-        textY = (TextView)findViewById(R.id.textY);
-        textZ = (TextView)findViewById(R.id.textZ);
-        textTime = (TextView)findViewById(R.id.textTime);
+
 
         startCounter();
 
@@ -44,17 +42,16 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
     public void onSensorChanged(SensorEvent event) {
 
         textX.setText("X: " + event.values[0]);
-        textY.setText("Y: " + event.values[1]);
-        textZ.setText("Z: " + event.values[2]);
+
 
         sensorValue = event.values[0];
 
 
-        if (sensorValue > 5){
+        if (sensorValue > 3){
 
             success = true;
 
-            Intent success = new Intent (AccelerationEvent.this, Successcreen.class);
+            Intent success = new Intent (ProximityEvent.this, Successcreen.class);
             startActivity(success);
             finish();
 
@@ -68,7 +65,7 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
     }
 
     public void startCounter (){
-        Thread thread = new Thread(new Timer());
+
         thread.start();
     }
 
@@ -80,11 +77,10 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
         public void run() {
             if (timerRun) {
 
-                for (eventTime = eventTime; eventTime > 0; eventTime--) {
+                for (eventTime = eventTime; eventTime >= 0; eventTime--) {
                     try {
                         Thread.sleep(1000);
                         timeCount = eventTime;
-                        textTime.setText("Time on the Clock: " + eventTime);
                     } catch (Exception e) {
                     }
 
@@ -94,7 +90,7 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
                 eventTime = 10;
 
                 if (success = false) {
-                    Intent fail = new Intent(AccelerationEvent.this, Failedscreen.class);
+                    Intent fail = new Intent(ProximityEvent.this, Failedscreen.class);
                     startActivity(fail);
                     finish();
                 }

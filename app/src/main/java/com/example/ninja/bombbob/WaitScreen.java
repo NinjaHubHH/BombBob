@@ -16,15 +16,19 @@ public class WaitScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waitscreen);
         waitedTime = new Random().nextInt(3);
+        eventChooser = new Random().nextInt(1);
         waitedTime = waitedTime + 3;
+        textTime = (TextView)findViewById(R.id.textTime);
+
         startCounter();
 
     }
 
-
+    private TextView textTime;
     public int waitedTime;
-    public boolean timerRun = true;
-    public boolean success = true;
+    protected boolean timerRun = true;
+    protected boolean success = true;
+    public int eventChooser;
 
 
     public void startCounter() {
@@ -39,7 +43,7 @@ public class WaitScreen extends AppCompatActivity {
             if (timerRun) {
                 for (waitedTime = waitedTime; waitedTime >= 0; waitedTime--) {
                     try {
-
+                        textTime.setText("Time on the Clock: " + waitedTime);
                         Thread.sleep(1000);
                     } catch (Exception e) {
                     }
@@ -49,9 +53,44 @@ public class WaitScreen extends AppCompatActivity {
                 timerRun = false;
                 if(success = true) {
                     success = false;
-                    Intent acceleration = new Intent(WaitScreen.this, AccelerationEvent.class);
-                    startActivity(acceleration);
-                    finish();
+
+
+                    if(eventChooser == 0) {
+                        Intent acceleration = new Intent(WaitScreen.this, AccelerationEvent.class);
+                        startActivity(acceleration);
+                        finish();
+                    }
+
+                    if(eventChooser == 1) {
+                        Intent acceleration = new Intent(WaitScreen.this, ProximityEvent.class);
+                        startActivity(acceleration);
+                        finish();
+                    }
+
+                    if(eventChooser == 2) {
+                        Intent acceleration = new Intent(WaitScreen.this, LightEvent.class);
+                        startActivity(acceleration);
+                        finish();
+                    }
+
+                    if(eventChooser == 3) {
+                        Intent acceleration = new Intent(WaitScreen.this, MagnetEvent.class);
+                        startActivity(acceleration);
+                        finish();
+                    }
+
+                    if(eventChooser == 4) {
+                        Intent acceleration = new Intent(WaitScreen.this, GyroEvent.class);
+                        startActivity(acceleration);
+                        finish();
+                    }
+
+                    if(eventChooser == 5) {
+                        Intent acceleration = new Intent(WaitScreen.this, NoActionEvent.class);
+                        startActivity(acceleration);
+                        finish();
+                    }
+
                 }
 
             }

@@ -10,31 +10,39 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class AccelerationEvent extends AppCompatActivity implements SensorEventListener {
+public class NoActionEvent extends AppCompatActivity implements SensorEventListener {
 
-    private TextView textX, textY, textZ, textTime;
-    private Sensor mySensor;
-    private SensorManager SM;
-    double sensorValue;
+    private TextView textX, textY, textZ;
+    private Sensor mySensor1;
+    private SensorManager SM1;
+
+    private Sensor mySensor2;
+    private SensorManager SM2;
+    double sensorValue1;
+    double sensorValue2;
+    double sensorValue3;
     public int timeCount;
-
+    Thread thread = new Thread(new Timer());
     public int eventTime  = 10;
-    protected boolean timerRun = true;
-    protected boolean success = false;
+    boolean timerRun = true;
+    boolean success = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_acceleration_event);
+        setContentView(R.layout.activity_no_action_event);
 
-        SM = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mySensor = SM.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
+        SM1 = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mySensor1 = SM1.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        SM1.registerListener(this, mySensor1, SensorManager.SENSOR_DELAY_NORMAL);
+
+        SM2 = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mySensor2 = SM2.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        SM2.registerListener(this, mySensor2, SensorManager.SENSOR_DELAY_NORMAL);
 
         textX = (TextView)findViewById(R.id.textX);
         textY = (TextView)findViewById(R.id.textY);
         textZ = (TextView)findViewById(R.id.textZ);
-        textTime = (TextView)findViewById(R.id.textTime);
 
         startCounter();
 
@@ -47,15 +55,18 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
         textY.setText("Y: " + event.values[1]);
         textZ.setText("Z: " + event.values[2]);
 
-        sensorValue = event.values[0];
+        sensorValue1 = event.values[0];
+        sensorValue2 = event.values[1];
+        sensorValue3 = event.values[2];
 
 
-        if (sensorValue > 5){
 
-            success = true;
+        if (sensorValue1 > 5 || sensorValue2 > 5 || sensorValue3 > 5){
 
-            Intent success = new Intent (AccelerationEvent.this, Successcreen.class);
-            startActivity(success);
+            success = false;
+
+            Intent fail = new Intent (NoActionEvent.this, Failedscreen.class);
+            startActivity(fail);
             finish();
 
         }
@@ -68,7 +79,7 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
     }
 
     public void startCounter (){
-        Thread thread = new Thread(new Timer());
+
         thread.start();
     }
 
@@ -80,11 +91,10 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
         public void run() {
             if (timerRun) {
 
-                for (eventTime = eventTime; eventTime > 0; eventTime--) {
+                for (eventTime = eventTime; eventTime >= 0; eventTime--) {
                     try {
                         Thread.sleep(1000);
                         timeCount = eventTime;
-                        textTime.setText("Time on the Clock: " + eventTime);
                     } catch (Exception e) {
                     }
 
@@ -93,9 +103,9 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
                 timerRun = false;
                 eventTime = 10;
 
-                if (success = false) {
-                    Intent fail = new Intent(AccelerationEvent.this, Failedscreen.class);
-                    startActivity(fail);
+                if (success = true) {
+                    Intent success = new Intent(NoActionEvent.this, Successcreen.class);
+                    startActivity(success);
                     finish();
                 }
             }
@@ -105,7 +115,8 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
     @Override
     protected void onPause(){
         super.onPause();
-        SM.unregisterListener(this);
+        SM1.unregisterListener(this);
+        SM2.unregisterListener(this);
         eventTime = 10;
     }
 
