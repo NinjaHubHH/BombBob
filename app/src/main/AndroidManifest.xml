@@ -21,6 +21,11 @@
         <activity android:name=".EventActivity" />
         <activity android:name=".AccelerationEvent" />
         <activity android:name=".Successcreen" />
+        <activity android:name=".GyroEvent" />
+        <activity android:name=".LightEvent" />
+        <activity android:name=".ProximityEvent" />
+        <activity android:name=".MagnetEvent" />
+        <activity android:name=".NoActionEvent" />
         <activity android:name=".Failedscreen"></activity>
     </application>
 

@@ -19,8 +19,7 @@ public class ProximityEvent extends AppCompatActivity implements SensorEventList
     public int timeCount;
     Thread thread = new Thread(new Timer());
     public int eventTime  = 10;
-    boolean timerRun = true;
-    boolean success = false;
+    boolean timerRunProx = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +46,7 @@ public class ProximityEvent extends AppCompatActivity implements SensorEventList
         sensorValue = event.values[0];
 
 
-        if (sensorValue > 3){
-
-            success = true;
+        if (sensorValue < 1){
 
             Intent success = new Intent (ProximityEvent.this, Successcreen.class);
             startActivity(success);
@@ -75,7 +72,7 @@ public class ProximityEvent extends AppCompatActivity implements SensorEventList
 
         @Override
         public void run() {
-            if (timerRun) {
+            if (timerRunProx) {
 
                 for (eventTime = eventTime; eventTime >= 0; eventTime--) {
                     try {
@@ -86,14 +83,13 @@ public class ProximityEvent extends AppCompatActivity implements SensorEventList
 
                 }
 
-                timerRun = false;
+                timerRunProx = false;
                 eventTime = 10;
 
-                if (success = false) {
-                    Intent fail = new Intent(ProximityEvent.this, Failedscreen.class);
-                    startActivity(fail);
-                    finish();
-                }
+                Intent fail = new Intent(ProximityEvent.this, Failedscreen.class);
+                startActivity(fail);
+                finish();
+
             }
         }
     }
@@ -102,7 +98,7 @@ public class ProximityEvent extends AppCompatActivity implements SensorEventList
     protected void onPause(){
         super.onPause();
         SM.unregisterListener(this);
-        eventTime = 10;
+        //eventTime = 10;
     }
 
 }

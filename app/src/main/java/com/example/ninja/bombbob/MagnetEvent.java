@@ -19,8 +19,7 @@ public class MagnetEvent extends AppCompatActivity implements SensorEventListene
     public int timeCount;
     Thread thread = new Thread(new Timer());
     public int eventTime  = 10;
-    boolean timerRun = true;
-    boolean success = false;
+    boolean timerRunMag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +44,7 @@ public class MagnetEvent extends AppCompatActivity implements SensorEventListene
         textX.setText("X: " + sensorValue);
 
 
-        if (sensorValue > 150){
-
-            success = true;
+        if (sensorValue > 1000){
 
             Intent success = new Intent (MagnetEvent.this, Successcreen.class);
             startActivity(success);
@@ -73,7 +70,7 @@ public class MagnetEvent extends AppCompatActivity implements SensorEventListene
 
         @Override
         public void run() {
-            if (timerRun) {
+            if (timerRunMag) {
 
                 for (eventTime = eventTime; eventTime >= 0; eventTime--) {
                     try {
@@ -84,14 +81,13 @@ public class MagnetEvent extends AppCompatActivity implements SensorEventListene
 
                 }
 
-                timerRun = false;
+                timerRunMag = false;
                 eventTime = 10;
 
-                if (success = false) {
                     Intent fail = new Intent(MagnetEvent.this, Failedscreen.class);
                     startActivity(fail);
                     finish();
-                }
+
             }
         }
     }

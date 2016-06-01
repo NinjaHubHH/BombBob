@@ -19,8 +19,7 @@ public class LightEvent extends AppCompatActivity implements SensorEventListener
     public int timeCount;
     Thread thread = new Thread(new Timer());
     public int eventTime  = 10;
-    boolean timerRun = true;
-    boolean success = false;
+    boolean timerRunLig = true;
 
     double sensorCheck;
 
@@ -53,8 +52,6 @@ public class LightEvent extends AppCompatActivity implements SensorEventListener
 
         if (sensorCheck > sensorValue + 300){
 
-            success = true;
-
             Intent success = new Intent (LightEvent.this, Successcreen.class);
             startActivity(success);
             finish();
@@ -79,7 +76,7 @@ public class LightEvent extends AppCompatActivity implements SensorEventListener
 
         @Override
         public void run() {
-            if (timerRun) {
+            if (timerRunLig) {
 
                 for (eventTime = eventTime; eventTime >= 0; eventTime--) {
                     try {
@@ -90,14 +87,13 @@ public class LightEvent extends AppCompatActivity implements SensorEventListener
 
                 }
 
-                timerRun = false;
+                timerRunLig = false;
                 eventTime = 10;
 
-                if (success = false) {
                     Intent fail = new Intent(LightEvent.this, Failedscreen.class);
                     startActivity(fail);
                     finish();
-                }
+
             }
         }
     }

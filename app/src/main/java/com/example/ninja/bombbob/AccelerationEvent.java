@@ -19,8 +19,7 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
     public int timeCount;
 
     public int eventTime  = 10;
-    protected boolean timerRun = true;
-    protected boolean success = false;
+    protected boolean timerRunAcc = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +34,7 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
         textY = (TextView)findViewById(R.id.textY);
         textZ = (TextView)findViewById(R.id.textZ);
         textTime = (TextView)findViewById(R.id.textTime);
+        textTime.setText("Time on the Clock: " + eventTime);
 
         startCounter();
 
@@ -51,8 +51,6 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
 
 
         if (sensorValue > 5){
-
-            success = true;
 
             Intent success = new Intent (AccelerationEvent.this, Successcreen.class);
             startActivity(success);
@@ -78,7 +76,7 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
 
         @Override
         public void run() {
-            if (timerRun) {
+            if (timerRunAcc) {
 
                 for (eventTime = eventTime; eventTime > 0; eventTime--) {
                     try {
@@ -90,14 +88,13 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
 
                 }
 
-                timerRun = false;
+                timerRunAcc = false;
                 eventTime = 10;
 
-                if (success = false) {
-                    Intent fail = new Intent(AccelerationEvent.this, Failedscreen.class);
-                    startActivity(fail);
-                    finish();
-                }
+                Intent fail = new Intent(AccelerationEvent.this, Failedscreen.class);
+                startActivity(fail);
+                finish();
+
             }
         }
     }

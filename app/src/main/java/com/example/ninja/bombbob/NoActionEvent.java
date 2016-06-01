@@ -16,15 +16,12 @@ public class NoActionEvent extends AppCompatActivity implements SensorEventListe
     private Sensor mySensor1;
     private SensorManager SM1;
 
-    private Sensor mySensor2;
-    private SensorManager SM2;
-    double sensorValue1;
-    double sensorValue2;
-    double sensorValue3;
+    double sensorValue1, sensorValue2, sensorValue3;
+    double sensorCheck1, sensorCheck2, sensorCheck3;
     public int timeCount;
     Thread thread = new Thread(new Timer());
     public int eventTime  = 10;
-    boolean timerRun = true;
+    boolean timerRunNoAc = true;
     boolean success = true;
 
     @Override
@@ -35,10 +32,6 @@ public class NoActionEvent extends AppCompatActivity implements SensorEventListe
         SM1 = (SensorManager) getSystemService(SENSOR_SERVICE);
         mySensor1 = SM1.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         SM1.registerListener(this, mySensor1, SensorManager.SENSOR_DELAY_NORMAL);
-
-        SM2 = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mySensor2 = SM2.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        SM2.registerListener(this, mySensor2, SensorManager.SENSOR_DELAY_NORMAL);
 
         textX = (TextView)findViewById(R.id.textX);
         textY = (TextView)findViewById(R.id.textY);
@@ -55,13 +48,22 @@ public class NoActionEvent extends AppCompatActivity implements SensorEventListe
         textY.setText("Y: " + event.values[1]);
         textZ.setText("Z: " + event.values[2]);
 
-        sensorValue1 = event.values[0];
-        sensorValue2 = event.values[1];
-        sensorValue3 = event.values[2];
+        if(sensorValue1 == 0) {
+            sensorValue1 = event.values[0];
+        }
+        if(sensorValue2 == 0) {
+            sensorValue2 = event.values[1];
+        }
+        if(sensorValue3 == 0) {
+            sensorValue3 = event.values[2];
+        }
+
+        sensorCheck1 = event.values[0];
+        sensorCheck2 = event.values[1];
+        sensorCheck3 = event.values[2];
 
 
-
-        if (sensorValue1 > 5 || sensorValue2 > 5 || sensorValue3 > 5){
+        if ((sensorValue1 - 2 > sensorCheck1 || sensorCheck1 > sensorValue1 + 2) || (sensorValue2 - 2 > sensorCheck2 || sensorCheck2 > sensorValue2 + 2) || (sensorValue3 - 2 > sensorCheck3 || sensorCheck3 > sensorValue3 + 2) ){
 
             success = false;
 
@@ -89,7 +91,7 @@ public class NoActionEvent extends AppCompatActivity implements SensorEventListe
 
         @Override
         public void run() {
-            if (timerRun) {
+            if (timerRunNoAc) {
 
                 for (eventTime = eventTime; eventTime >= 0; eventTime--) {
                     try {
@@ -100,7 +102,7 @@ public class NoActionEvent extends AppCompatActivity implements SensorEventListe
 
                 }
 
-                timerRun = false;
+                timerRunNoAc = false;
                 eventTime = 10;
 
                 if (success = true) {
@@ -116,7 +118,6 @@ public class NoActionEvent extends AppCompatActivity implements SensorEventListe
     protected void onPause(){
         super.onPause();
         SM1.unregisterListener(this);
-        SM2.unregisterListener(this);
         eventTime = 10;
     }
 

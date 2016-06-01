@@ -19,8 +19,7 @@ public class GyroEvent extends AppCompatActivity implements SensorEventListener 
     public int timeCount;
     Thread thread = new Thread(new Timer());
     public int eventTime  = 10;
-    boolean timerRun = true;
-    boolean success = false;
+    boolean timerRunGyr = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +50,6 @@ public class GyroEvent extends AppCompatActivity implements SensorEventListener 
 
         if (sensorValue > 5){
 
-            success = true;
-
             Intent success = new Intent (GyroEvent.this, Successcreen.class);
             startActivity(success);
             finish();
@@ -77,7 +74,7 @@ public class GyroEvent extends AppCompatActivity implements SensorEventListener 
 
         @Override
         public void run() {
-            if (timerRun) {
+            if (timerRunGyr) {
 
                 for (eventTime = eventTime; eventTime >= 0; eventTime--) {
                     try {
@@ -88,14 +85,13 @@ public class GyroEvent extends AppCompatActivity implements SensorEventListener 
 
                 }
 
-                timerRun = false;
+                timerRunGyr = false;
                 eventTime = 10;
 
-                if (success = false) {
                     Intent fail = new Intent(GyroEvent.this, Failedscreen.class);
                     startActivity(fail);
                     finish();
-                }
+
             }
         }
     }
