@@ -1,6 +1,7 @@
 package com.example.ninja.bombbob;
 
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,11 +26,44 @@ public class WaitScreen extends AppCompatActivity {
 
     }
 
+    //Dicker Timer
+
+    private CountDownTimer timer = new CountDownTimer(10000, 1000) {
+
+        public void onTick(long millisUntilFinished) {
+        }
+
+        public void onFinish() {
+            Intent fail = new Intent(WaitScreen.this, Looser.class);
+            startActivity(fail);
+            finish();
+        }
+    }.start();
+
+
+
+
+
     private TextView textTime;
     public int waitedTime;
     protected boolean timerRunWait = true;
     protected boolean success = true;
     public int eventChooser;
+
+
+
+
+    private CountDownTimer bigTimer = new CountDownTimer(24000, 1000) {
+
+        public void onTick(long millisUntilFinished) {
+        }
+
+        public void onFinish() {
+            Intent failTimer = new Intent(WaitScreen.this, Looser.class);
+            startActivity(failTimer);
+            finish();
+        }
+    }.start();
 
 
     public void startCounter() {
@@ -97,6 +131,7 @@ public class WaitScreen extends AppCompatActivity {
             }
         }
     }
+
 
 
 
