@@ -26,21 +26,6 @@ public class WaitScreen extends AppCompatActivity {
 
     }
 
-    //Dicker Timer
-
-    private CountDownTimer timer = new CountDownTimer(10000, 1000) {
-
-        public void onTick(long millisUntilFinished) {
-        }
-
-        public void onFinish() {
-            Intent fail = new Intent(WaitScreen.this, Looser.class);
-            startActivity(fail);
-            finish();
-        }
-    }.start();
-
-
 
 
 
@@ -50,20 +35,6 @@ public class WaitScreen extends AppCompatActivity {
     protected boolean success = true;
     public int eventChooser;
 
-
-
-
-    private CountDownTimer bigTimer = new CountDownTimer(24000, 1000) {
-
-        public void onTick(long millisUntilFinished) {
-        }
-
-        public void onFinish() {
-            Intent failTimer = new Intent(WaitScreen.this, Looser.class);
-            startActivity(failTimer);
-            finish();
-        }
-    }.start();
 
 
     public void startCounter() {

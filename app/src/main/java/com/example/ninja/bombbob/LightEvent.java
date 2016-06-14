@@ -51,6 +51,7 @@ public class LightEvent extends AppCompatActivity implements SensorEventListener
         sensorCheck = event.values[0];
 
         if (sensorCheck > sensorValue + 300){
+            timerRunLig = false;
 
             Intent success = new Intent (LightEvent.this, Successcreen.class);
             startActivity(success);

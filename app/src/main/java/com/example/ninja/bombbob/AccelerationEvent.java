@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,12 +17,22 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
     private Sensor mySensor;
     private SensorManager SM;
     double sensorValue;
-    public int timeCount;
 
-    public int eventTime  = 10;
-    protected boolean timerRunAcc = true;
+    private CountDownTimer timer = new CountDownTimer(5000, 1000) {
 
-    @Override
+        public void onTick(long millisUntilFinished) {
+            textTime.setText("Time on the Clock: " + (millisUntilFinished / 1000));
+        }
+
+        public void onFinish() {
+            Intent fail = new Intent(AccelerationEvent.this, Failedscreen.class);
+            startActivity(fail);
+            finish();
+        }
+    }.start();
+
+
+@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acceleration_event);
@@ -34,9 +45,7 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
         textY = (TextView)findViewById(R.id.textY);
         textZ = (TextView)findViewById(R.id.textZ);
         textTime = (TextView)findViewById(R.id.textTime);
-        textTime.setText("Time on the Clock: " + eventTime);
 
-        startCounter();
 
     }
 
@@ -65,45 +74,13 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
 
     }
 
-    public void startCounter (){
-        Thread thread = new Thread(new Timer());
-        thread.start();
-    }
 
-
-
-    private class Timer implements Runnable {
-
-        @Override
-        public void run() {
-            if (timerRunAcc) {
-
-                for (eventTime = eventTime; eventTime > 0; eventTime--) {
-                    try {
-                        Thread.sleep(1000);
-                        timeCount = eventTime;
-                        textTime.setText("Time on the Clock: " + eventTime);
-                    } catch (Exception e) {
-                    }
-
-                }
-
-                timerRunAcc = false;
-                eventTime = 10;
-
-                Intent fail = new Intent(AccelerationEvent.this, Failedscreen.class);
-                startActivity(fail);
-                finish();
-
-            }
-        }
-    }
 
     @Override
     protected void onPause(){
         super.onPause();
         SM.unregisterListener(this);
-        eventTime = 10;
+        timer.cancel();
     }
 
 }

@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,11 +19,18 @@ public class NoActionEvent extends AppCompatActivity implements SensorEventListe
 
     double sensorValue1, sensorValue2, sensorValue3;
     double sensorCheck1, sensorCheck2, sensorCheck3;
-    public int timeCount;
-    Thread thread = new Thread(new Timer());
-    public int eventTime  = 10;
-    boolean timerRunNoAc = true;
-    boolean success = true;
+
+    private CountDownTimer timer = new CountDownTimer(5000, 1000) {
+
+        public void onTick(long millisUntilFinished) {
+        }
+
+        public void onFinish() {
+            Intent success = new Intent(NoActionEvent.this, Successcreen.class);
+            startActivity(success);
+            finish();
+        }
+    }.start();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +44,6 @@ public class NoActionEvent extends AppCompatActivity implements SensorEventListe
         textX = (TextView)findViewById(R.id.textX);
         textY = (TextView)findViewById(R.id.textY);
         textZ = (TextView)findViewById(R.id.textZ);
-
-        startCounter();
 
     }
 
@@ -65,8 +71,6 @@ public class NoActionEvent extends AppCompatActivity implements SensorEventListe
 
         if ((sensorValue1 - 2 > sensorCheck1 || sensorCheck1 > sensorValue1 + 2) || (sensorValue2 - 2 > sensorCheck2 || sensorCheck2 > sensorValue2 + 2) || (sensorValue3 - 2 > sensorCheck3 || sensorCheck3 > sensorValue3 + 2) ){
 
-            success = false;
-
             Intent fail = new Intent (NoActionEvent.this, Failedscreen.class);
             startActivity(fail);
             finish();
@@ -80,45 +84,13 @@ public class NoActionEvent extends AppCompatActivity implements SensorEventListe
 
     }
 
-    public void startCounter (){
 
-        thread.start();
-    }
-
-
-
-    private class Timer implements Runnable {
-
-        @Override
-        public void run() {
-            if (timerRunNoAc) {
-
-                for (eventTime = eventTime; eventTime >= 0; eventTime--) {
-                    try {
-                        Thread.sleep(1000);
-                        timeCount = eventTime;
-                    } catch (Exception e) {
-                    }
-
-                }
-
-                timerRunNoAc = false;
-                eventTime = 10;
-
-                if (success = true) {
-                    Intent success = new Intent(NoActionEvent.this, Successcreen.class);
-                    startActivity(success);
-                    finish();
-                }
-            }
-        }
-    }
 
     @Override
     protected void onPause(){
         super.onPause();
         SM1.unregisterListener(this);
-        eventTime = 10;
+        timer.cancel();
     }
 
 }
