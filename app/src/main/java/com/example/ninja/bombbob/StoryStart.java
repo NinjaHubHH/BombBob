@@ -29,6 +29,7 @@ public class StoryStart extends AppCompatActivity implements View.OnClickListene
         else if(v == skipbtn){
             Intent i = new Intent(this, WaitScreen.class);
             startActivity(i);
+
         }
     }
 }

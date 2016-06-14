@@ -2,6 +2,7 @@ package com.example.ninja.bombbob;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,14 +12,21 @@ import android.widget.Button;
 public class Successcreen extends AppCompatActivity {
 
     Button buttonBack;
+    MediaPlayer winSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_successcreen);
         switchBack();
-
+        winSound = MediaPlayer.create(this, R.raw.clap);
+        playMusic();
     }
+
+    private void playMusic() {
+        winSound.start();
+    }
+
 
     public void switchBack(){
         buttonBack = (Button)findViewById(R.id.backButton);

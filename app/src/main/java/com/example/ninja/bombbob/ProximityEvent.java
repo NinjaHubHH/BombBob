@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,10 +17,22 @@ public class ProximityEvent extends AppCompatActivity implements SensorEventList
     private Sensor mySensor;
     private SensorManager SM;
     double sensorValue;
-    public int timeCount;
-    Thread thread = new Thread(new Timer());
-    public int eventTime  = 10;
-    boolean timerRunProx = true;
+
+
+    private CountDownTimer timer = new CountDownTimer(5000, 1000) {
+
+        public void onTick(long millisUntilFinished) {
+        }
+
+        public void onFinish() {
+            Intent fail = new Intent(ProximityEvent.this, Failedscreen.class);
+            startActivity(fail);
+            finish();
+        }
+    }.start();
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +44,6 @@ public class ProximityEvent extends AppCompatActivity implements SensorEventList
         SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         textX = (TextView)findViewById(R.id.textX);
-
-
-        startCounter();
 
     }
 
@@ -47,7 +57,6 @@ public class ProximityEvent extends AppCompatActivity implements SensorEventList
 
 
         if (sensorValue < 1){
-
             Intent success = new Intent (ProximityEvent.this, Successcreen.class);
             startActivity(success);
             finish();
@@ -61,44 +70,12 @@ public class ProximityEvent extends AppCompatActivity implements SensorEventList
 
     }
 
-    public void startCounter (){
-
-        thread.start();
-    }
-
-
-
-    private class Timer implements Runnable {
-
-        @Override
-        public void run() {
-            if (timerRunProx) {
-
-                for (eventTime = eventTime; eventTime >= 0; eventTime--) {
-                    try {
-                        Thread.sleep(1000);
-                        timeCount = eventTime;
-                    } catch (Exception e) {
-                    }
-
-                }
-
-                timerRunProx = false;
-                eventTime = 10;
-
-                Intent fail = new Intent(ProximityEvent.this, Failedscreen.class);
-                startActivity(fail);
-                finish();
-
-            }
-        }
-    }
 
     @Override
     protected void onPause(){
         super.onPause();
         SM.unregisterListener(this);
-        //eventTime = 10;
+        timer.cancel();
     }
 
 }
