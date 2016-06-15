@@ -6,7 +6,18 @@ package com.example.ninja.bombbob;
         import android.os.IBinder;
         import android.util.Log;
 
+        import android.app.Service;
+        import android.content.Intent;
+        import android.os.CountDownTimer;
+        import android.os.IBinder;
+        import android.util.Log;
+
 public class BigTimerService extends Service {
+
+    private final static String TAG = "BroadcastService";
+
+    public static final String COUNTDOWN_BR = "your_package_name.countdown_br";
+    Intent bi = new Intent(COUNTDOWN_BR);
 
     CountDownTimer cdt = null;
 
@@ -14,23 +25,23 @@ public class BigTimerService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        System.out.println("Starting timer...");
+        Log.i(TAG, "Starting timer...");
 
-            cdt = new CountDownTimer(10000, 1000) {
+        cdt = new CountDownTimer(60000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
-                System.out.println("Countdown seconds remaining: " + millisUntilFinished / 1000);
+                Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
+                bi.putExtra("countdown", millisUntilFinished);
+                sendBroadcast(bi);
             }
 
             @Override
             public void onFinish() {
-
-                System.out.println("Timer finished");
-                Intent i = new Intent();
-                i.setClass(BigTimerService.this, LoseScreen.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
+                Log.i(TAG, "Timer finished");
+                Intent dialogIntent = new Intent(BigTimerService.this, LoseScreen.class);
+                dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(dialogIntent);
             }
         };
 
@@ -41,8 +52,13 @@ public class BigTimerService extends Service {
     public void onDestroy() {
 
         cdt.cancel();
-        System.out.println("Timer cancelled");
+        Log.i(TAG, "Timer cancelled");
         super.onDestroy();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override

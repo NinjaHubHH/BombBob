@@ -20,19 +20,21 @@ public class WaitScreen extends AppCompatActivity {
     public int waitedTime;
     public int eventChooser;
     private CountDownTimer timer = null;
+    private String TAG = "Timer: ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waitscreen);
-        waitedTime = new Random().nextInt(3);
+        waitedTime = new Random().nextInt(6);
+        waitedTime = waitedTime + 3;
         waitedTime = waitedTime * 1000;
         eventChooser = new Random().nextInt(6);
         waitedTime = waitedTime + 3;
         textTime = (TextView)findViewById(R.id.textTime);
 
         startService(new Intent(this, BigTimerService.class));
-
+        Log.i(TAG, "Started service");
 
         startCounter();
 
@@ -40,12 +42,54 @@ public class WaitScreen extends AppCompatActivity {
 
 
 
+
+
+
+    private BroadcastReceiver br = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateGUI(intent); // or whatever method used to update your GUI fields
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerReceiver(br, new IntentFilter(BigTimerService.COUNTDOWN_BR));
+        Log.i(TAG, "Registered broacast receiver");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(br);
+        Log.i(TAG, "Unregistered broacast receiver");
+        timer.cancel();
+    }
+
+    @Override
+    public void onStop() {
+        try {
+            unregisterReceiver(br);
+        } catch (Exception e) {
+            // Receiver was probably already stopped in onPause()
+        }
+        super.onStop();
+    }
     @Override
     public void onDestroy() {
-        stopService(new Intent(this, BigTimerService.class));
-        System.out.println("Stopped service");
+        //stopService(new Intent(this, BigTimerService.class));
+        Log.i(TAG, "Stopped service");
         super.onDestroy();
     }
+
+    private void updateGUI(Intent intent) {
+        if (intent.getExtras() != null) {
+            long millisUntilFinished = intent.getLongExtra("countdown", 0);
+            Log.i(TAG, "Countdown seconds remaining: " +  millisUntilFinished / 1000);
+        }
+    }
+
 
     public void startCounter(){
 
@@ -97,4 +141,5 @@ public class WaitScreen extends AppCompatActivity {
 
 
         }
+
 }

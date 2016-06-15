@@ -28,6 +28,7 @@
         <activity android:name=".NoActionEvent" />
         <activity android:name=".Failedscreen" />
         <activity android:name=".LoseScreen"></activity>
+        <service android:name=".BigTimerService" />
     </application>
 
 </manifest>

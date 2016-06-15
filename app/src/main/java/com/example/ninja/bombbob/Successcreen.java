@@ -12,19 +12,15 @@ import android.widget.Button;
 public class Successcreen extends AppCompatActivity {
 
     Button buttonBack;
-    MediaPlayer winSound;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_successcreen);
         switchBack();
-        playMusic();
     }
 
-    private void playMusic() {
-        winSound.start();
-    }
 
 
     public void switchBack(){
