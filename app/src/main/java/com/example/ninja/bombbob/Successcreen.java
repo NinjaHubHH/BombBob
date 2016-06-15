@@ -19,7 +19,6 @@ public class Successcreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_successcreen);
         switchBack();
-        winSound = MediaPlayer.create(this, R.raw.clap);
         playMusic();
     }
 

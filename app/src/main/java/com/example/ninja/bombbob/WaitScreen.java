@@ -16,103 +16,46 @@ import java.util.Random;
 
 public class WaitScreen extends AppCompatActivity {
 
-    private static final String TAG = "Action: ";
+    private TextView textTime;
+    public int waitedTime;
+    public int eventChooser;
+    private CountDownTimer timer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waitscreen);
         waitedTime = new Random().nextInt(3);
+        waitedTime = waitedTime * 1000;
         eventChooser = new Random().nextInt(6);
         waitedTime = waitedTime + 3;
         textTime = (TextView)findViewById(R.id.textTime);
 
-        startService(new Intent(this, BroadcastService.class));
+        startService(new Intent(this, BigTimerService.class));
 
 
         startCounter();
 
     }
 
-    private BroadcastReceiver br = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            updateGUI(intent); // or whatever method used to update your GUI fields
 
-        }
-    };
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        registerReceiver(br, new IntentFilter(BroadcastService.COUNTDOWN_BR));
-        Log.i(TAG, "Registered broacast receiver");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        unregisterReceiver(br);
-        Log.i(TAG, "Unregistered broacast receiver");
-    }
-
-    @Override
-    public void onStop() {
-        try {
-            unregisterReceiver(br);
-        } catch (Exception e) {
-            // Receiver was probably already stopped in onPause()
-        }
-        super.onStop();
-    }
 
     @Override
     public void onDestroy() {
-        stopService(new Intent(this, BroadcastService.class));
-        Log.i(TAG, "Stopped service");
+        stopService(new Intent(this, BigTimerService.class));
+        System.out.println("Stopped service");
         super.onDestroy();
     }
 
-    private void updateGUI(Intent intent) {
-        if (intent.getExtras() != null) {
-            long millisUntilFinished = intent.getLongExtra("countdown", 0);
-            Log.i(TAG, "Countdown seconds remaining: " +  millisUntilFinished / 1000);
-        }
-    }
+    public void startCounter(){
 
+        timer = new CountDownTimer(waitedTime, 1000) {
 
-    private TextView textTime;
-    public int waitedTime;
-    protected boolean timerRunWait = true;
-    protected boolean success = true;
-    public int eventChooser;
-
-
-
-    public void startCounter() {
-        Thread thread = new Thread(new Timer());
-        thread.start();
-    }
-
-    private class Timer implements Runnable {
-
-        @Override
-        public void run() {
-            if (timerRunWait) {
-                for (waitedTime = waitedTime; waitedTime >= 0; waitedTime--) {
-                    try {
-                        textTime.setText("Time on the Clock: " + waitedTime);
-                        Thread.sleep(1000);
-                    } catch (Exception e) {
-                    }
-
+                public void onTick(long millisUntilFinished) {
+                    textTime.setText("Time on the Clock: " + (millisUntilFinished / 1000));
                 }
 
-                timerRunWait = false;
-                if(success = true) {
-                    success = false;
-
-
+                public void onFinish() {
                     if(eventChooser == 0) {
                         Intent acceleration = new Intent(WaitScreen.this, AccelerationEvent.class);
                         startActivity(acceleration);
@@ -148,14 +91,10 @@ public class WaitScreen extends AppCompatActivity {
                         startActivity(noAct);
                         finish();
                     }
-
                 }
+            }.start();
 
-            }
+
+
         }
-    }
-
-
-
-
 }
