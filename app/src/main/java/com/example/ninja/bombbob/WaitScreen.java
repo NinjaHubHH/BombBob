@@ -21,23 +21,39 @@ public class WaitScreen extends AppCompatActivity {
     public int eventChooser;
     private CountDownTimer timer = null;
     private String TAG = "Timer: ";
+    public static long score = 0;
+    public static int checkedEvents = 0;
+    private boolean won = false;
+
+    public static void checkEvent (){
+        checkedEvents = checkedEvents + 1;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waitscreen);
-        waitedTime = new Random().nextInt(6);
-        waitedTime = waitedTime + 3;
-        waitedTime = waitedTime * 1000;
-        eventChooser = new Random().nextInt(6);
-        waitedTime = waitedTime + 3;
-        textTime = (TextView)findViewById(R.id.textTime);
 
-        startService(new Intent(this, BigTimerService.class));
-        Log.i(TAG, "Started service");
+        if (score == 0) {score = System.currentTimeMillis();}
+        if (checkedEvents > 5){
+            Intent win = new Intent(WaitScreen.this, WinScreen.class);
+            startActivity(win);
+            finish();
+            won = true;
+        }
+        if (won == false) {
+            waitedTime = new Random().nextInt(6);
+            waitedTime = waitedTime + 3;
+            waitedTime = waitedTime * 1000;
+            eventChooser = new Random().nextInt(6);
+            waitedTime = waitedTime + 3;
+            textTime = (TextView) findViewById(R.id.textTime);
 
-        startCounter();
+            startService(new Intent(this, BigTimerService.class));
+            Log.i(TAG, "Started service");
 
+            startCounter();
+        }
     }
 
 

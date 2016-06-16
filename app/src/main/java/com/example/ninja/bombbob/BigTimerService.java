@@ -15,11 +15,14 @@ package com.example.ninja.bombbob;
 public class BigTimerService extends Service {
 
     private final static String TAG = "BroadcastService";
+    public static int bombtime = 120000;
+    public static int bombtick = 1000;
+    public static long millis;
 
     public static final String COUNTDOWN_BR = "your_package_name.countdown_br";
     Intent bi = new Intent(COUNTDOWN_BR);
 
-    CountDownTimer cdt = null;
+    static CountDownTimer cdt = null;
 
     @Override
     public void onCreate() {
@@ -27,30 +30,29 @@ public class BigTimerService extends Service {
 
         Log.i(TAG, "Starting timer...");
 
-        cdt = new CountDownTimer(60000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
+            cdt = new CountDownTimer(bombtime, bombtick) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    millis = millisUntilFinished;
+                    Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
+                    bi.putExtra("countdown", millisUntilFinished);
+                    sendBroadcast(bi);
+                }
 
-                Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
-                bi.putExtra("countdown", millisUntilFinished);
-                sendBroadcast(bi);
-            }
+                @Override
+                public void onFinish() {
+                    Log.i(TAG, "Timer finished");
+                    Intent dialogIntent = new Intent(BigTimerService.this, LoseScreen.class);
+                    dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(dialogIntent);
+                }
+            };
 
-            @Override
-            public void onFinish() {
-                Log.i(TAG, "Timer finished");
-                Intent dialogIntent = new Intent(BigTimerService.this, LoseScreen.class);
-                dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(dialogIntent);
-            }
-        };
-
-        cdt.start();
-    }
+            cdt.start();
+        }
 
     @Override
     public void onDestroy() {
-
         cdt.cancel();
         Log.i(TAG, "Timer cancelled");
         super.onDestroy();
@@ -65,4 +67,7 @@ public class BigTimerService extends Service {
     public IBinder onBind(Intent arg0) {
         return null;
     }
+
+
 }
+

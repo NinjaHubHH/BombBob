@@ -27,8 +27,12 @@
         <activity android:name=".MagnetEvent" />
         <activity android:name=".NoActionEvent" />
         <activity android:name=".Failedscreen" />
-        <activity android:name=".LoseScreen"></activity>
+        <activity android:name=".LoseScreen" />
+
         <service android:name=".BigTimerService" />
+
+        <activity android:name=".WinScreen" />
+        <activity android:name=".CloseScreen"></activity>
     </application>
 
 </manifest>

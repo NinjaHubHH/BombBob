@@ -17,10 +17,12 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
     private Sensor mySensor;
     private SensorManager SM;
     double sensorValue;
+    long millis;
 
-    private CountDownTimer timer = new CountDownTimer(5000, 1000) {
+    private CountDownTimer timer = new CountDownTimer(10000, 1000) {
 
         public void onTick(long millisUntilFinished) {
+            millis = millisUntilFinished;
             textTime.setText("Time on the Clock: " + (millisUntilFinished / 1000));
         }
 
@@ -59,7 +61,7 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
         sensorValue = event.values[0];
 
 
-        if (sensorValue > 5){
+        if (sensorValue > 5 && millis >= 5){
 
             Intent success = new Intent (AccelerationEvent.this, Successcreen.class);
             startActivity(success);
@@ -67,6 +69,13 @@ public class AccelerationEvent extends AppCompatActivity implements SensorEventL
 
         }
 
+        else if (sensorValue > 5 && millis < 5){
+
+            Intent close = new Intent (AccelerationEvent.this, CloseScreen.class);
+            startActivity(close);
+            finish();
+
+        }
     }
 
     @Override

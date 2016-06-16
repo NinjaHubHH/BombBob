@@ -19,6 +19,7 @@ public class Successcreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_successcreen);
         switchBack();
+        WaitScreen.checkEvent();
     }
 
 
