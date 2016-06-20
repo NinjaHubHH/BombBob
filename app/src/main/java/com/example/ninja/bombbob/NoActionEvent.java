@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 
 public class NoActionEvent extends AppCompatActivity implements SensorEventListener {
 
-    private TextView textX, textY, textZ;
     private Sensor mySensor1;
     private SensorManager SM1;
 
@@ -32,27 +32,25 @@ public class NoActionEvent extends AppCompatActivity implements SensorEventListe
         }
     }.start();
 
+    MediaPlayer mp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_no_action_event);
 
+        mp = MediaPlayer.create(NoActionEvent.this, R.raw.piep);
+        mp.start();
+
         SM1 = (SensorManager) getSystemService(SENSOR_SERVICE);
         mySensor1 = SM1.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         SM1.registerListener(this, mySensor1, SensorManager.SENSOR_DELAY_NORMAL);
-
-        textX = (TextView)findViewById(R.id.textX);
-        textY = (TextView)findViewById(R.id.textY);
-        textZ = (TextView)findViewById(R.id.textZ);
 
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        textX.setText("X: " + event.values[0]);
-        textY.setText("Y: " + event.values[1]);
-        textZ.setText("Z: " + event.values[2]);
 
         if(sensorValue1 == 0) {
             sensorValue1 = event.values[0];
@@ -91,6 +89,7 @@ public class NoActionEvent extends AppCompatActivity implements SensorEventListe
         super.onPause();
         SM1.unregisterListener(this);
         timer.cancel();
+        mp.stop();
     }
 
 }

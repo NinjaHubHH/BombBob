@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +14,11 @@ import android.widget.TextView;
 
 public class MagnetEvent extends AppCompatActivity implements SensorEventListener {
 
-    private TextView textX;
     private Sensor mySensor;
     private SensorManager SM;
     double sensorValue;
 
-    private CountDownTimer timer = new CountDownTimer(5000, 1000) {
+    private CountDownTimer timer = new CountDownTimer(14000, 1000) {
 
         public void onTick(long millisUntilFinished) {
         }
@@ -30,17 +30,20 @@ public class MagnetEvent extends AppCompatActivity implements SensorEventListene
         }
     }.start();
 
+
+    MediaPlayer mp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_magnet_event);
 
+        mp = MediaPlayer.create(MagnetEvent.this, R.raw.piep);
+        mp.start();
+
         SM = (SensorManager) getSystemService(SENSOR_SERVICE);
         mySensor = SM.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
-
-        textX = (TextView)findViewById(R.id.textX);
-
 
     }
 
@@ -48,8 +51,6 @@ public class MagnetEvent extends AppCompatActivity implements SensorEventListene
     public void onSensorChanged(SensorEvent event) {
 
         sensorValue = event.values[0] + event.values[1] + event.values[2];
-
-        textX.setText("X: " + sensorValue);
 
 
         if (sensorValue > 1000){
@@ -72,6 +73,7 @@ public class MagnetEvent extends AppCompatActivity implements SensorEventListene
         super.onPause();
         SM.unregisterListener(this);
         timer.cancel();
+        mp.stop();
 
     }
 

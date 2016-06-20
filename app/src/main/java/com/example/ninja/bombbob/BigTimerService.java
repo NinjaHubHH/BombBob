@@ -2,6 +2,7 @@ package com.example.ninja.bombbob;
 
         import android.app.Service;
         import android.content.Intent;
+        import android.media.MediaPlayer;
         import android.os.CountDownTimer;
         import android.os.IBinder;
         import android.util.Log;
@@ -18,6 +19,10 @@ public class BigTimerService extends Service {
     public static int bombtime = 120000;
     public static int bombtick = 1000;
     public static long millis;
+    private boolean enterCountdown = false;
+    private boolean playerRunning = false;
+
+    MediaPlayer mp;
 
     public static final String COUNTDOWN_BR = "your_package_name.countdown_br";
     Intent bi = new Intent(COUNTDOWN_BR);
@@ -37,6 +42,12 @@ public class BigTimerService extends Service {
                     Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
                     bi.putExtra("countdown", millisUntilFinished);
                     sendBroadcast(bi);
+                    if (millis < 15000 && millis != 0 && enterCountdown == false){
+                        enterCountdown = true;
+                        mp = MediaPlayer.create(BigTimerService.this, R.raw.alarm);
+                        mp.start();
+                        playerRunning = true;
+                    }
                 }
 
                 @Override
@@ -56,6 +67,7 @@ public class BigTimerService extends Service {
         cdt.cancel();
         Log.i(TAG, "Timer cancelled");
         super.onDestroy();
+       if(playerRunning){ mp.stop();}
     }
 
     @Override

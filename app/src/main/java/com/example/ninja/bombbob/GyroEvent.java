@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +14,11 @@ import android.widget.TextView;
 
 public class GyroEvent extends AppCompatActivity implements SensorEventListener {
 
-    private TextView textX, textY, textZ;
     private Sensor mySensor;
     private SensorManager SM;
     double sensorValue;
 
-    private CountDownTimer timer = new CountDownTimer(5000, 1000) {
+    private CountDownTimer timer = new CountDownTimer(14000, 1000) {
 
         public void onTick(long millisUntilFinished) {
         }
@@ -30,29 +30,26 @@ public class GyroEvent extends AppCompatActivity implements SensorEventListener 
         }
     }.start();
 
-
+    MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gyro_event);
 
+        mp = MediaPlayer.create(GyroEvent.this, R.raw.piep);
+        mp.start();
+
         SM = (SensorManager) getSystemService(SENSOR_SERVICE);
         mySensor = SM.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
 
-        textX = (TextView)findViewById(R.id.textX);
-        textY = (TextView)findViewById(R.id.textY);
-        textZ = (TextView)findViewById(R.id.textZ);
 
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        textX.setText("X: " + event.values[0]);
-        textY.setText("Y: " + event.values[1]);
-        textZ.setText("Z: " + event.values[2]);
 
         sensorValue = event.values[0];
 
@@ -81,6 +78,7 @@ public class GyroEvent extends AppCompatActivity implements SensorEventListener 
         super.onPause();
         SM.unregisterListener(this);
        timer.cancel();
+        mp.stop();
     }
 
 }

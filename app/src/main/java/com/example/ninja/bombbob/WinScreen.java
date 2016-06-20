@@ -15,13 +15,12 @@ public class WinScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_win_screen);
 
-        //stopService(new Intent(this, BigTimerService.class));
-
         finalScore = System.currentTimeMillis();
         finalScore = finalScore - WaitScreen.score;
 
         winText = (TextView)findViewById(R.id.winText);
         winText.setText("Score: " + finalScore / 1000);
 
+        stopService(new Intent(this, BigTimerService.class));
     }
 }

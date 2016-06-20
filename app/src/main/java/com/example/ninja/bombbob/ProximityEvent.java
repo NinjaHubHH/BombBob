@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,13 +14,13 @@ import android.widget.TextView;
 
 public class ProximityEvent extends AppCompatActivity implements SensorEventListener {
 
-    private TextView textX;
+
     private Sensor mySensor;
     private SensorManager SM;
     double sensorValue;
 
 
-    private CountDownTimer timer = new CountDownTimer(5000, 1000) {
+    private CountDownTimer timer = new CountDownTimer(14000, 1000) {
 
         public void onTick(long millisUntilFinished) {
         }
@@ -32,26 +33,24 @@ public class ProximityEvent extends AppCompatActivity implements SensorEventList
     }.start();
 
 
-
+    MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_proximity_event);
 
+        mp = MediaPlayer.create(ProximityEvent.this, R.raw.piep);
+        mp.start();
+
         SM = (SensorManager) getSystemService(SENSOR_SERVICE);
         mySensor = SM.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
-
-        textX = (TextView)findViewById(R.id.textX);
 
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-
-        textX.setText("X: " + event.values[0]);
-
 
         sensorValue = event.values[0];
 
@@ -76,6 +75,7 @@ public class ProximityEvent extends AppCompatActivity implements SensorEventList
         super.onPause();
         SM.unregisterListener(this);
         timer.cancel();
+        mp.stop();
     }
 
 }

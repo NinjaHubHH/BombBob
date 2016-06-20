@@ -23,10 +23,13 @@ public class WaitScreen extends AppCompatActivity {
     private String TAG = "Timer: ";
     public static long score = 0;
     public static int checkedEvents = 0;
-    private boolean won = false;
+    public static boolean won = false;
+
+    public static int emergenceTime = 14;
 
     public static void checkEvent (){
         checkedEvents = checkedEvents + 1;
+        System.out.println(checkedEvents);
     }
 
     @Override
@@ -42,11 +45,10 @@ public class WaitScreen extends AppCompatActivity {
             won = true;
         }
         if (won == false) {
-            waitedTime = new Random().nextInt(6);
+            waitedTime = new Random().nextInt(5);
             waitedTime = waitedTime + 3;
             waitedTime = waitedTime * 1000;
-            eventChooser = new Random().nextInt(6);
-            waitedTime = waitedTime + 3;
+            eventChooser = new Random().nextInt(7);
             textTime = (TextView) findViewById(R.id.textTime);
 
             startService(new Intent(this, BigTimerService.class));
@@ -123,7 +125,7 @@ public class WaitScreen extends AppCompatActivity {
                     }
 
                     if(eventChooser == 1) {
-                        Intent prox = new Intent(WaitScreen.this, ProximityEvent.class);
+                        Intent prox = new Intent(WaitScreen.this, TapEvent.class);
                         startActivity(prox);
                         finish();
                     }
@@ -147,6 +149,12 @@ public class WaitScreen extends AppCompatActivity {
                     }
 
                     if(eventChooser == 5) {
+                        Intent noAct = new Intent(WaitScreen.this, ProximityEvent.class);
+                        startActivity(noAct);
+                        finish();
+                    }
+
+                    if(eventChooser == 6) {
                         Intent noAct = new Intent(WaitScreen.this, NoActionEvent.class);
                         startActivity(noAct);
                         finish();

@@ -16,17 +16,12 @@ public class StoryStart extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        Button weiterbtn  = (Button)findViewById(R.id.weiterbtn);
         Button skipbtn = (Button)findViewById(R.id.skipbtn);
 
-        weiterbtn.setOnClickListener(this);
         skipbtn.setOnClickListener(this);
 
-        if(v == weiterbtn) {
-            Intent intent = new Intent(this, StoryTutorial.class);
-            startActivity(intent);
-        }
-        else if(v == skipbtn){
+
+        if(v == skipbtn){
             Intent i = new Intent(this, WaitScreen.class);
             startActivity(i);
 
