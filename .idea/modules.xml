@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BombBob.iml" filepath="$PROJECT_DIR$/BombBob.iml" />
-      <module fileurl="file://$PROJECT_DIR$/BombBob-TimerService.iml" filepath="$PROJECT_DIR$/BombBob-TimerService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BombBobTest.iml" filepath="$PROJECT_DIR$/BombBobTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

@@ -53,7 +53,7 @@ public class MagnetEvent extends AppCompatActivity implements SensorEventListene
         sensorValue = event.values[0] + event.values[1] + event.values[2];
 
 
-        if (sensorValue > 1000){
+        if (sensorValue > 2500){
             Intent success = new Intent (MagnetEvent.this, Successcreen.class);
             startActivity(success);
             finish();

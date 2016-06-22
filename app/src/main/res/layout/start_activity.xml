@@ -9,23 +9,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".StartScreen"
     android:onClick="onClick"
-    android:background="@drawable/bg">
+    android:background="@drawable/beginnscreen">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Sensor Blast"
-        android:id="@+id/textView13"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="184dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tap to Start"
-        android:id="@+id/textView14"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
 </RelativeLayout>
